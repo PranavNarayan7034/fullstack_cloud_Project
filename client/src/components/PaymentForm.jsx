@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CreditCard, Lock, ShieldCheck, Smartphone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import axios from 'axios'
 
 const PaymentForm = () => {
   const [formData, setFormData] = useState({
@@ -8,12 +9,25 @@ const PaymentForm = () => {
     cardNumber: '',
     expiry: '',
     cvc: '',
+    payment: "31.32"
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const onHandleSubmit = async () => {
+    // console.log("Payment completed",formData)
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/payment', formData)
+      console.log("Payment completed")
+      alert("Payment Completed")
+    } catch (error) {
+      console.log("Error in payment", error)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100 flex items-center justify-center p-4">
@@ -164,6 +178,7 @@ const PaymentForm = () => {
             </div>
 
             <motion.button
+              onClick={onHandleSubmit}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               className="w-full mt-6 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-4 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all flex items-center justify-center gap-2"
